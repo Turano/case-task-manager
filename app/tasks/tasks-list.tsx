@@ -38,21 +38,33 @@ export default function TasksList() {
   }
 
   return (
-    <section>
+    <section className="flex flex-col gap-4 max-w-xl mx-auto">
+      <h1 className="text-2xl font-bold text-center">Minhas Tarefas</h1>
       {tasks.map((task) => (
-        <article key={task.id}>
-          <h2>{task.titulo}</h2>
-          <p>{task.dataCriacao.toLocaleString()}</p>
-          {task.descricao && <p>{task.descricao}</p>}
-          <Link href={`/tasks/${task.id}/edit`}>Editar</Link>
-          <button
-            onClick={() => {
-              deleteTask.mutate({ id: task.id });
-            }}
-            disabled={deleteTask.isPending}
-          >
-            Excluir
-          </button>
+        <article
+          key={task.id}
+          className="flex flex-col gap-2 border p-4 rounded"
+        >
+          <h2 className="text-xl font-bold">{task.titulo}</h2>
+          {/* <p>{task.dataCriacao.toLocaleString()}</p> */}
+          {task.descricao && <p className="text-gray-400">{task.descricao}</p>}
+          <div className="flex flex-row-reverse gap-2">
+            <button
+              onClick={() => {
+                deleteTask.mutate({ id: task.id });
+              }}
+              disabled={deleteTask.isPending}
+              className="bg-red-600 text-white px-2 rounded hover:bg-red-700 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Excluir
+            </button>
+            <Link
+              href={`/tasks/${task.id}/edit`}
+              className="bg-yellow-600 text-white px-2 rounded hover:bg-yellow-700 cursor-pointer"
+            >
+              Editar
+            </Link>
+          </div>
         </article>
       ))}
     </section>

@@ -14,9 +14,9 @@ export default async function EditTaskPage({ params }: EditTaskPageProps) {
   });
 
   return (
-    <main>
-      <h1>Editar tarefa</h1>
+    <section className="my-auto gap-4">
+      <h1 className="text-2xl font-bold text-center">Editar tarefa</h1>
       <TaskForm task={task} />
-    </main>
+    </section>
   );
 }

@@ -79,8 +79,11 @@ export default function TaskForm({ task }: TaskFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
+    <form
+      onSubmit={handleSubmit}
+      className="flex flex-col gap-4 max-w-xl mx-auto"
+    >
+      <div className="flex flex-col gap-1">
         <label htmlFor="titulo">Título:</label>
         <input
           type="text"
@@ -88,19 +91,24 @@ export default function TaskForm({ task }: TaskFormProps) {
           name="titulo"
           value={formData.titulo}
           onChange={handleChange}
+          className="border p-2 rounded"
         />
       </div>
-      <div>
+      <div className="flex flex-col gap-1">
         <label htmlFor="descricao">Descrição:</label>
         <textarea
           id="descricao"
           name="descricao"
           value={formData.descricao}
           onChange={handleChange}
+          className="border p-2 rounded"
         />
       </div>
       {validationError && <p>{validationError}</p>}
-      <button type="submit">
+      <button
+        type="submit"
+        className="bg-green-600 text-white p-2 rounded hover:bg-green-700 cursor-pointer"
+      >
         {task ? "Atualizar Tarefa" : "Criar Tarefa"}
       </button>
     </form>
