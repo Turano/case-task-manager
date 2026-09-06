@@ -1,11 +1,16 @@
-import { getQueryClient, trpc } from "@/trpc/server";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+
+import { getQueryClient, trpc } from "@/trpc/server";
+import { serverTRPC } from "@/trpc/server-client";
+
 import TasksList from "./tasks-list";
 
 export default async function Tasks() {
   const queryClient = getQueryClient();
 
-  await queryClient.query(trpc.tasks.list.queryOptions());
+  const tasks = await serverTRPC.tasks.list.query();
+
+  queryClient.setQueryData(trpc.tasks.list.queryKey(), tasks);
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
