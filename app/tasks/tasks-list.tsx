@@ -2,6 +2,7 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTRPC } from "@/trpc/client";
+import Link from "next/link";
 
 export default function TasksList() {
   const trpc = useTRPC();
@@ -43,6 +44,7 @@ export default function TasksList() {
           <h2>{task.titulo}</h2>
           <p>{task.dataCriacao.toLocaleString()}</p>
           {task.descricao && <p>{task.descricao}</p>}
+          <Link href={`/tasks/${task.id}/edit`}>Editar</Link>
           <button
             onClick={() => {
               deleteTask.mutate({ id: task.id });

@@ -1,6 +1,7 @@
 "use client";
 
 import { useTRPC } from "@/trpc/client";
+import { Task } from "@/trpc/routers/tasks";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -10,10 +11,14 @@ type TaskFormData = {
   descricao: string;
 };
 
-export default function TaskForm() {
+type TaskFormProps = {
+  task?: Task;
+};
+
+export default function TaskForm({ task }: TaskFormProps) {
   const [formData, setFormData] = useState<TaskFormData>({
-    titulo: "",
-    descricao: "",
+    titulo: task?.titulo || "",
+    descricao: task?.descricao || "",
   });
   const [validationError, setValidationError] = useState("");
 
@@ -25,6 +30,18 @@ export default function TaskForm() {
 
   const createTask = useMutation(
     trpc.tasks.create.mutationOptions({
+      onSuccess: async () => {
+        await queryClient.invalidateQueries({
+          queryKey: trpc.tasks.list.queryKey(),
+        });
+
+        router.push("/tasks");
+      },
+    }),
+  );
+
+  const updateTask = useMutation(
+    trpc.tasks.update.mutationOptions({
       onSuccess: async () => {
         await queryClient.invalidateQueries({
           queryKey: trpc.tasks.list.queryKey(),
@@ -53,7 +70,12 @@ export default function TaskForm() {
       return;
     }
     setValidationError("");
-    createTask.mutate(formData);
+
+    if (task) {
+      updateTask.mutate({ id: task.id, ...formData });
+    } else {
+      createTask.mutate(formData);
+    }
   };
 
   return (
@@ -78,7 +100,9 @@ export default function TaskForm() {
         />
       </div>
       {validationError && <p>{validationError}</p>}
-      <button type="submit">Criar Tarefa</button>
+      <button type="submit">
+        {task ? "Atualizar Tarefa" : "Criar Tarefa"}
+      </button>
     </form>
   );
 }

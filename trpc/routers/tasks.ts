@@ -47,4 +47,36 @@ export const tasksRouter = createTRPCRouter({
       const [deletedTask] = tasks.splice(index, 1);
       return deletedTask;
     }),
+  update: baseProcedure
+    .input(
+      z.object({
+        id: z.uuid(),
+        titulo: z.string().trim().min(1),
+        descricao: z.string().optional(),
+      }),
+    )
+    .mutation(({ input }) => {
+      const index = tasks.findIndex((task) => task.id === input.id);
+      if (index === -1) {
+        throw new Error("Task not found");
+      }
+      const updatedTask: Task = {
+        ...tasks[index],
+        titulo: input.titulo,
+        descricao: input.descricao,
+      };
+      tasks[index] = updatedTask;
+      return updatedTask;
+    }),
+  getById: baseProcedure
+    .input(z.object({ id: z.string() }))
+    .query(({ input }) => {
+      const task = tasks.find((task) => task.id === input.id);
+
+      if (!task) {
+        throw new Error("Task not found");
+      }
+
+      return task;
+    }),
 });
