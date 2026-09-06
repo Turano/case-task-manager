@@ -33,4 +33,18 @@ export const tasksRouter = createTRPCRouter({
 
       return task;
     }),
+  delete: baseProcedure
+    .input(
+      z.object({
+        id: z.uuid(),
+      }),
+    )
+    .mutation(({ input }) => {
+      const index = tasks.findIndex((task) => task.id === input.id);
+      if (index === -1) {
+        throw new Error("Task not found");
+      }
+      const [deletedTask] = tasks.splice(index, 1);
+      return deletedTask;
+    }),
 });
