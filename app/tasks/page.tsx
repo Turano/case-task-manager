@@ -9,9 +9,15 @@ import Link from "next/link";
 export default async function Tasks() {
   const queryClient = getQueryClient();
 
-  const tasks = await serverTRPC.tasks.list.query();
+  const firstPage = await serverTRPC.tasks.list.query({
+    limit: 20,
+    cursor: 0,
+  });
 
-  queryClient.setQueryData(trpc.tasks.list.queryKey(), tasks);
+  queryClient.setQueryData(trpc.tasks.list.infiniteQueryKey(), {
+    pages: [firstPage],
+    pageParams: [0],
+  });
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>

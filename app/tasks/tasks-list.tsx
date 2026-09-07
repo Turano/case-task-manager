@@ -1,17 +1,62 @@
 "use client";
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { useTRPC } from "@/trpc/client";
 import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 
 export default function TasksList() {
   const trpc = useTRPC();
 
   const {
-    data: tasks,
+    data,
     isLoading,
     error,
-  } = useQuery(trpc.tasks.list.queryOptions());
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery(
+    trpc.tasks.list.infiniteQueryOptions(
+      {
+        limit: 20,
+      },
+      {
+        getNextPageParam: (lastPage) => lastPage.nextCursor,
+      },
+    ),
+  );
+
+  const observerTarget = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
+          fetchNextPage();
+        }
+      },
+      {
+        // It makes so that the div being watched is found before it is visible on screen
+        rootMargin: "200px",
+      },
+    );
+
+    const target = observerTarget.current;
+
+    if (target) {
+      observer.observe(target);
+    }
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
+
+  const tasks = data?.pages.flatMap((page) => page.items) ?? [];
 
   const queryClient = useQueryClient();
 
@@ -19,7 +64,7 @@ export default function TasksList() {
     trpc.tasks.delete.mutationOptions({
       onSuccess: async () => {
         await queryClient.invalidateQueries({
-          queryKey: trpc.tasks.list.queryKey(),
+          queryKey: trpc.tasks.list.infiniteQueryKey(),
         });
       },
     }),
@@ -67,6 +112,7 @@ export default function TasksList() {
           </div>
         </article>
       ))}
+      <div ref={observerTarget} />
     </section>
   );
 }

@@ -32,7 +32,7 @@ export default function TaskForm({ task }: TaskFormProps) {
     trpc.tasks.create.mutationOptions({
       onSuccess: async () => {
         await queryClient.invalidateQueries({
-          queryKey: trpc.tasks.list.queryKey(),
+          queryKey: trpc.tasks.list.infiniteQueryKey(),
         });
 
         router.push("/tasks");
@@ -44,7 +44,7 @@ export default function TaskForm({ task }: TaskFormProps) {
     trpc.tasks.update.mutationOptions({
       onSuccess: async () => {
         await queryClient.invalidateQueries({
-          queryKey: trpc.tasks.list.queryKey(),
+          queryKey: trpc.tasks.list.infiniteQueryKey(),
         });
 
         router.push("/tasks");

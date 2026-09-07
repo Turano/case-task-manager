@@ -11,9 +11,24 @@ export type Task = {
 const tasks: Task[] = [];
 
 export const tasksRouter = createTRPCRouter({
-  list: baseProcedure.query(() => {
-    return tasks;
-  }),
+  list: baseProcedure
+    .input(
+      z.object({
+        limit: z.number().default(20),
+        cursor: z.number().default(0),
+      }),
+    )
+    .query(({ input }) => {
+      const start = input.cursor;
+      const end = start + input.limit;
+
+      const items = tasks.slice(start, end);
+
+      return {
+        items,
+        nextCursor: end < tasks.length ? end : undefined,
+      };
+    }),
   create: baseProcedure
     .input(
       z.object({
