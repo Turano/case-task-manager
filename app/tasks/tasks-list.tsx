@@ -105,6 +105,11 @@ export default function TasksList() {
             </button>
             <Link
               href={`/tasks/${task.id}/edit`}
+              onClick={(e) => {
+                if (deleteTask.isPending) {
+                  e.preventDefault();
+                }
+              }}
               className="bg-yellow-600 text-white px-2 rounded hover:bg-yellow-700 cursor-pointer"
             >
               Editar
