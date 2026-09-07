@@ -83,7 +83,7 @@ export default function TasksList() {
   }
 
   return (
-    <section className="flex flex-col gap-4 max-w-xl mx-auto">
+    <section className="flex flex-col gap-4 max-w-xl mx-auto min-w-sm">
       <h1 className="text-2xl font-bold text-center">Minhas Tarefas</h1>
       {tasks.map((task) => (
         <article
