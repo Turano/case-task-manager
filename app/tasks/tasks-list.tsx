@@ -7,9 +7,11 @@ import {
 } from "@tanstack/react-query";
 import { useTRPC } from "@/trpc/client";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
+import { useToast } from "@/components/toast";
 
 export default function TasksList() {
+  const { showToast } = useToast();
   const trpc = useTRPC();
 
   const {
@@ -63,9 +65,13 @@ export default function TasksList() {
   const deleteTask = useMutation(
     trpc.tasks.delete.mutationOptions({
       onSuccess: async () => {
+        showToast("Tarefa excluída com sucesso!", "success");
         await queryClient.invalidateQueries({
           queryKey: trpc.tasks.list.infiniteQueryKey(),
         });
+      },
+      onError: (error) => {
+        showToast(`Erro ao excluir tarefa: ${error.message}`, "error");
       },
     }),
   );

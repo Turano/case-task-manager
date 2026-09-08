@@ -1,5 +1,6 @@
 "use client";
 
+import { useToast } from "@/components/toast";
 import { useTRPC } from "@/trpc/client";
 import { Task } from "@/trpc/routers/tasks";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -28,6 +29,8 @@ export default function TaskForm({ task }: TaskFormProps) {
 
   const trpc = useTRPC();
 
+  const { showToast } = useToast();
+
   const createTask = useMutation(
     trpc.tasks.create.mutationOptions({
       onSuccess: async () => {
@@ -35,7 +38,12 @@ export default function TaskForm({ task }: TaskFormProps) {
           queryKey: trpc.tasks.list.infiniteQueryKey(),
         });
 
+        showToast("Tarefa criada com sucesso!", "success");
+
         router.push("/tasks");
+      },
+      onError: (error) => {
+        showToast(`Erro ao criar tarefa: ${error.message}`, "error");
       },
     }),
   );
@@ -47,7 +55,12 @@ export default function TaskForm({ task }: TaskFormProps) {
           queryKey: trpc.tasks.list.infiniteQueryKey(),
         });
 
+        showToast("Tarefa atualizada com sucesso!", "success");
+
         router.push("/tasks");
+      },
+      onError: (error) => {
+        showToast(`Erro ao atualizar tarefa: ${error.message}`, "error");
       },
     }),
   );
