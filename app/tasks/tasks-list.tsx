@@ -9,6 +9,7 @@ import { useTRPC } from "@/trpc/client";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useToast } from "@/components/toast";
+import LoadingTaskList from "@/components/loading-task-list";
 
 export default function TasksList() {
   const { showToast } = useToast();
@@ -16,23 +17,17 @@ export default function TasksList() {
 
   const [deletingTaskId, setDeletingTaskId] = useState<string | null>(null);
 
-  const {
-    data,
-    isLoading,
-    error,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-  } = useInfiniteQuery(
-    trpc.tasks.list.infiniteQueryOptions(
-      {
-        limit: 20,
-      },
-      {
-        getNextPageParam: (lastPage) => lastPage.nextCursor,
-      },
-    ),
-  );
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useInfiniteQuery(
+      trpc.tasks.list.infiniteQueryOptions(
+        {
+          limit: 20,
+        },
+        {
+          getNextPageParam: (lastPage) => lastPage.nextCursor,
+        },
+      ),
+    );
 
   const observerTarget = useRef<HTMLDivElement>(null);
 
@@ -78,16 +73,17 @@ export default function TasksList() {
     }),
   );
 
-  if (isLoading) {
-    return <p>Carregando tarefas...</p>;
+  if (!data) {
+    return <LoadingTaskList />;
   }
 
-  if (error) {
-    return <p>Erro ao carregar tarefas.</p>;
-  }
-
-  if (!tasks || tasks.length === 0) {
-    return <p>Nenhuma tarefa cadastrada.</p>;
+  if (tasks.length === 0) {
+    return (
+      <section className="flex flex-col gap-4 max-w-xl mx-auto min-w-sm">
+        <h1 className="text-2xl font-bold text-center">Minhas Tarefas</h1>
+        <p className="text-center">Nenhuma tarefa cadastrada.</p>
+      </section>
+    );
   }
 
   return (
