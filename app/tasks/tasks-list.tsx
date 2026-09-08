@@ -1,21 +1,13 @@
 "use client";
 
-import {
-  useInfiniteQuery,
-  useMutation,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { useTRPC } from "@/trpc/client";
-import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
-import { useToast } from "@/components/toast";
+import { useEffect, useRef } from "react";
 import LoadingTaskList from "@/components/loading-task-list";
+import TaskCard from "@/components/task-card";
 
 export default function TasksList() {
-  const { showToast } = useToast();
   const trpc = useTRPC();
-
-  const [deletingTaskId, setDeletingTaskId] = useState<string | null>(null);
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery(
@@ -57,22 +49,6 @@ export default function TasksList() {
 
   const tasks = data?.pages.flatMap((page) => page.items) ?? [];
 
-  const queryClient = useQueryClient();
-
-  const deleteTask = useMutation(
-    trpc.tasks.delete.mutationOptions({
-      onSuccess: async () => {
-        showToast("Tarefa excluída com sucesso!", "success");
-        await queryClient.invalidateQueries({
-          queryKey: trpc.tasks.list.infiniteQueryKey(),
-        });
-      },
-      onError: (error) => {
-        showToast(`Erro ao excluir tarefa: ${error.message}`, "error");
-      },
-    }),
-  );
-
   if (!data) {
     return <LoadingTaskList />;
   }
@@ -90,43 +66,7 @@ export default function TasksList() {
     <section className="flex flex-col gap-4 sm:max-w-xl sm:mx-auto sm:min-w-sm">
       <h1 className="text-2xl font-bold text-center">Minhas Tarefas</h1>
       {tasks.map((task) => (
-        <article
-          key={task.id}
-          className="flex flex-col gap-2 border p-4 rounded"
-        >
-          <h2 className="text-xl font-bold line-clamp-2 wrap-break-word">
-            {task.titulo}
-          </h2>
-          {/* <p>{task.dataCriacao.toLocaleString()}</p> */}
-          {task.descricao && (
-            <p className="text-gray-400 wrap-break-word whitespace-pre-wrap">
-              {task.descricao}
-            </p>
-          )}
-          <div className="flex flex-row-reverse gap-2">
-            <button
-              onClick={() => {
-                setDeletingTaskId(task.id);
-                deleteTask.mutate({ id: task.id });
-              }}
-              disabled={deletingTaskId === task.id}
-              className="bg-red-600 text-white px-2 rounded hover:bg-red-700 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {deletingTaskId === task.id ? "Excluindo..." : "Excluir"}
-            </button>
-            <Link
-              href={`/tasks/${task.id}/edit`}
-              onClick={(e) => {
-                if (deletingTaskId === task.id) {
-                  e.preventDefault();
-                }
-              }}
-              className="bg-yellow-600 text-white px-2 rounded hover:bg-yellow-700 cursor-pointer"
-            >
-              Editar
-            </Link>
-          </div>
-        </article>
+        <TaskCard key={task.id} task={task} />
       ))}
       <div ref={observerTarget} />
     </section>
