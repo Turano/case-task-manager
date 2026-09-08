@@ -44,7 +44,7 @@ export const tasksRouter = createTRPCRouter({
         dataCriacao: new Date().toISOString(),
       };
 
-      tasks.push(task);
+      tasks.unshift(task);
 
       return task;
     }),
