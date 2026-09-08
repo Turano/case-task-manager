@@ -86,6 +86,8 @@ export default function TaskForm({ task }: TaskFormProps) {
     }
   };
 
+  const isPending = createTask.isPending || updateTask.isPending;
+
   return (
     <form
       onSubmit={handleSubmit}
@@ -120,9 +122,9 @@ export default function TaskForm({ task }: TaskFormProps) {
       <button
         type="submit"
         className="bg-green-600 text-white p-2 rounded hover:bg-green-700 cursor-pointer"
-        disabled={createTask.isPending || updateTask.isPending}
+        disabled={isPending}
       >
-        {createTask.isPending || updateTask.isPending
+        {isPending
           ? "Processando..."
           : task
             ? "Atualizar Tarefa"
