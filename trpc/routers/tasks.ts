@@ -4,6 +4,8 @@ import { Task } from "../types";
 
 
 const tasks: Task[] = [];
+// Tasks are kept in memory as requested by the specification.
+// The data is not persisted and is lost when the process is restarted.
 
 export const tasksRouter = createTRPCRouter({
   list: baseProcedure
@@ -14,6 +16,8 @@ export const tasksRouter = createTRPCRouter({
       }),
     )
     .query(({ input }) => {
+      // Cursor represents the starting position of the next page.
+      // Pagination allows loading tasks incrementally in the infinite scroll.
       const start = input.cursor;
       const end = start + input.limit;
 

@@ -16,6 +16,9 @@ type TaskFormProps = {
   task?: Task;
 };
 
+// The same form is reused for both task creation and editing.
+// When a task is provided, its current values initialize the form
+// and the update mutation is used on submission.
 export default function TaskForm({ task }: TaskFormProps) {
   const [formData, setFormData] = useState<TaskFormData>({
     titulo: task?.titulo || "",

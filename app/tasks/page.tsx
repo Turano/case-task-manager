@@ -9,6 +9,8 @@ import Link from "next/link";
 export default async function Tasks() {
   const queryClient = getQueryClient();
 
+  // Preloads the first page on the server and hydrates the cache on the client,
+  // meeting the SSR requirement without a new initial fetch.
   const firstPage = await serverTRPC.tasks.list.query({
     limit: 20,
     cursor: 0,

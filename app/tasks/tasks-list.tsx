@@ -31,7 +31,8 @@ export default function TasksList() {
         }
       },
       {
-        // It makes so that the div being watched is found before it is visible on screen
+        // I anticipate the loading of the next page to reduce
+        // the chance of the user reaching the end of the list before the response.
         rootMargin: "200px",
       },
     );
