@@ -1,11 +1,7 @@
 import { baseProcedure, createTRPCRouter } from "../init";
 import z from "zod";
 import { Task } from "../types";
-
-
-const tasks: Task[] = [];
-// Tasks are kept in memory as requested by the specification.
-// The data is not persisted and is lost when the process is restarted.
+import { tasks } from "../store/tasks";
 
 export const tasksRouter = createTRPCRouter({
   list: baseProcedure
