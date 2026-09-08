@@ -31,17 +31,19 @@ export default function TaskForm({ task }: TaskFormProps) {
 
   const { showToast } = useToast();
 
+  const handleSuccess = async (message: string) => {
+    await queryClient.invalidateQueries({
+      queryKey: trpc.tasks.list.infiniteQueryKey(),
+    });
+
+    showToast(message, "success");
+
+    router.push("/tasks");
+  };
+
   const createTask = useMutation(
     trpc.tasks.create.mutationOptions({
-      onSuccess: async () => {
-        await queryClient.invalidateQueries({
-          queryKey: trpc.tasks.list.infiniteQueryKey(),
-        });
-
-        showToast("Tarefa criada com sucesso!", "success");
-
-        router.push("/tasks");
-      },
+      onSuccess: async () => await handleSuccess("Tarefa criada com sucesso!"),
       onError: (error) => {
         showToast(`Erro ao criar tarefa: ${error.message}`, "error");
       },
@@ -50,15 +52,8 @@ export default function TaskForm({ task }: TaskFormProps) {
 
   const updateTask = useMutation(
     trpc.tasks.update.mutationOptions({
-      onSuccess: async () => {
-        await queryClient.invalidateQueries({
-          queryKey: trpc.tasks.list.infiniteQueryKey(),
-        });
-
-        showToast("Tarefa atualizada com sucesso!", "success");
-
-        router.push("/tasks");
-      },
+      onSuccess: async () =>
+        await handleSuccess("Tarefa atualizada com sucesso!"),
       onError: (error) => {
         showToast(`Erro ao atualizar tarefa: ${error.message}`, "error");
       },
