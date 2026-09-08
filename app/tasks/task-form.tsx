@@ -26,6 +26,10 @@ export default function TaskForm({ task }: TaskFormProps) {
   });
   const [validationError, setValidationError] = useState("");
 
+  // The isNavigating state is used to prevent multiple submissions
+  // while the user is being redirected to the tasks list after a successful mutation.
+  const [isNavigating, setIsNavigating] = useState(false);
+
   const router = useRouter();
 
   const queryClient = useQueryClient();
@@ -48,6 +52,7 @@ export default function TaskForm({ task }: TaskFormProps) {
     trpc.tasks.create.mutationOptions({
       onSuccess: async () => await handleSuccess("Tarefa criada com sucesso!"),
       onError: (error) => {
+        setIsNavigating(false);
         showToast(`Erro ao criar tarefa: ${error.message}`, "error");
       },
     }),
@@ -65,6 +70,7 @@ export default function TaskForm({ task }: TaskFormProps) {
         await handleSuccess("Tarefa atualizada com sucesso!");
       },
       onError: () => {
+        setIsNavigating(false);
         showToast("Não foi possível atualizar a tarefa.", "error");
       },
     }),
@@ -88,6 +94,7 @@ export default function TaskForm({ task }: TaskFormProps) {
       return;
     }
     setValidationError("");
+    setIsNavigating(true);
 
     if (task) {
       updateTask.mutate({ id: task.id, ...formData });
@@ -95,8 +102,6 @@ export default function TaskForm({ task }: TaskFormProps) {
       createTask.mutate(formData);
     }
   };
-
-  const isPending = createTask.isPending || updateTask.isPending;
 
   return (
     <form
@@ -132,9 +137,9 @@ export default function TaskForm({ task }: TaskFormProps) {
       <button
         type="submit"
         className="bg-green-600 text-white p-2 rounded hover:bg-green-700 cursor-pointer"
-        disabled={isPending}
+        disabled={isNavigating}
       >
-        {isPending
+        {isNavigating
           ? "Processando..."
           : task
             ? "Atualizar Tarefa"
