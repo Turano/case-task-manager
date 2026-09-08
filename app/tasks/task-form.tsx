@@ -55,10 +55,17 @@ export default function TaskForm({ task }: TaskFormProps) {
 
   const updateTask = useMutation(
     trpc.tasks.update.mutationOptions({
-      onSuccess: async () =>
-        await handleSuccess("Tarefa atualizada com sucesso!"),
-      onError: (error) => {
-        showToast(`Erro ao atualizar tarefa: ${error.message}`, "error");
+      onSuccess: async (updatedTask) => {
+        await queryClient.invalidateQueries({
+          queryKey: trpc.tasks.getById.queryOptions({
+            id: updatedTask.id,
+          }).queryKey,
+        });
+
+        await handleSuccess("Tarefa atualizada com sucesso!");
+      },
+      onError: () => {
+        showToast("Não foi possível atualizar a tarefa.", "error");
       },
     }),
   );
