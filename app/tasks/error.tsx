@@ -13,7 +13,7 @@ export default function Error({ error, reset }: ErrorProps) {
   }, [error]);
 
   return (
-    <section className="flex flex-col gap-4 max-w-xl mx-auto my-auto">
+    <section className="flex flex-col gap-4 sm:max-w-xl sm:mx-auto sm:my-auto">
       <h1 className="text-2xl font-bold text-center">Algo deu errado</h1>
 
       <p className="text-center">Não foi possível carregar a página.</p>

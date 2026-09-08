@@ -1,6 +1,6 @@
 export default function LoadingTaskList() {
   return (
-    <section className="flex flex-col gap-4 max-w-xl mx-auto min-w-sm">
+    <section className="flex flex-col gap-4 sm:max-w-xl sm:mx-auto sm:min-w-sm">
       <h1 className="text-2xl font-bold text-center">Minhas Tarefas</h1>
 
       <article className="flex flex-col gap-2 border p-4 rounded">

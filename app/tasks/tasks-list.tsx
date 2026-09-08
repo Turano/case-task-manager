@@ -79,7 +79,7 @@ export default function TasksList() {
 
   if (tasks.length === 0) {
     return (
-      <section className="flex flex-col gap-4 max-w-xl mx-auto min-w-sm">
+      <section className="flex flex-col gap-4 sm:max-w-xl sm:mx-auto sm:min-w-sm">
         <h1 className="text-2xl font-bold text-center">Minhas Tarefas</h1>
         <p className="text-center">Nenhuma tarefa cadastrada.</p>
       </section>
@@ -87,7 +87,7 @@ export default function TasksList() {
   }
 
   return (
-    <section className="flex flex-col gap-4 max-w-xl mx-auto min-w-sm">
+    <section className="flex flex-col gap-4 sm:max-w-xl sm:mx-auto sm:min-w-sm">
       <h1 className="text-2xl font-bold text-center">Minhas Tarefas</h1>
       {tasks.map((task) => (
         <article

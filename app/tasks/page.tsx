@@ -23,9 +23,10 @@ export default async function Tasks() {
     <HydrationBoundary state={dehydrate(queryClient)}>
       <Link
         href="/tasks/create"
-        className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 cursor-pointer fixed right-4 bottom-4"
+        className="bg-green-600 text-white px-4 py-2 rounded-full sm:rounded hover:bg-green-700 cursor-pointer fixed right-4 bottom-4"
       >
-        Criar Nova Tarefa
+        <span className="sm:hidden">+</span>
+        <span className="hidden sm:inline">Criar Nova Tarefa</span>
       </Link>
       <TasksList />
     </HydrationBoundary>
