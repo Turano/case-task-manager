@@ -1,12 +1,7 @@
 import { baseProcedure, createTRPCRouter } from "../init";
 import z from "zod";
+import { Task } from "../types";
 
-export type Task = {
-  id: string;
-  titulo: string;
-  descricao?: string;
-  dataCriacao: string;
-};
 
 const tasks: Task[] = [];
 

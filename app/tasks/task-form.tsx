@@ -2,7 +2,7 @@
 
 import { useToast } from "@/components/toast";
 import { useTRPC } from "@/trpc/client";
-import { Task } from "@/trpc/routers/tasks";
+import { Task } from "@/trpc/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
