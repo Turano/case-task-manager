@@ -32,8 +32,8 @@ export const tasksRouter = createTRPCRouter({
   create: baseProcedure
     .input(
       z.object({
-        titulo: z.string().trim().min(1),
-        descricao: z.string().optional(),
+        titulo: z.string().trim().min(1).max(100),
+        descricao: z.string().max(500).optional(),
       }),
     )
     .mutation(({ input }) => {

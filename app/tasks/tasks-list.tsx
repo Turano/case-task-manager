@@ -98,9 +98,15 @@ export default function TasksList() {
           key={task.id}
           className="flex flex-col gap-2 border p-4 rounded"
         >
-          <h2 className="text-xl font-bold">{task.titulo}</h2>
+          <h2 className="text-xl font-bold line-clamp-2 wrap-break-word">
+            {task.titulo}
+          </h2>
           {/* <p>{task.dataCriacao.toLocaleString()}</p> */}
-          {task.descricao && <p className="text-gray-400">{task.descricao}</p>}
+          {task.descricao && (
+            <p className="text-gray-400 wrap-break-word whitespace-pre-wrap">
+              {task.descricao}
+            </p>
+          )}
           <div className="flex flex-row-reverse gap-2">
             <button
               onClick={() => {

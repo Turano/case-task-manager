@@ -105,6 +105,7 @@ export default function TaskForm({ task }: TaskFormProps) {
           value={formData.titulo}
           onChange={handleChange}
           className="border p-2 rounded"
+          maxLength={100}
         />
       </div>
       <div className="flex flex-col gap-1">
@@ -115,6 +116,7 @@ export default function TaskForm({ task }: TaskFormProps) {
           value={formData.descricao}
           onChange={handleChange}
           className="border p-2 rounded"
+          maxLength={500}
         />
       </div>
       {validationError && (
