@@ -57,7 +57,7 @@ export const tasksRouter = createTRPCRouter({
     .mutation(({ input }) => {
       const index = tasks.findIndex((task) => task.id === input.id);
       if (index === -1) {
-        throw new Error("Task not found");
+        throw new Error("Tarefa não encontrada");
       }
       const [deletedTask] = tasks.splice(index, 1);
       return deletedTask;
@@ -73,7 +73,7 @@ export const tasksRouter = createTRPCRouter({
     .mutation(({ input }) => {
       const index = tasks.findIndex((task) => task.id === input.id);
       if (index === -1) {
-        throw new Error("Task not found");
+        throw new Error("Tarefa não encontrada");
       }
       const updatedTask: Task = {
         ...tasks[index],
