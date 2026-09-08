@@ -1,22 +1,29 @@
-import { serverTRPC } from "@/trpc/server-client";
+"use client";
+
+import { useTRPC } from "@/trpc/client";
+import { useQuery } from "@tanstack/react-query";
+import { useParams } from "next/navigation";
 import TaskForm from "../../task-form";
+import LoadingTaskForm from "@/components/loading-task-form";
 
-type EditTaskPageProps = {
-  params: Promise<{
-    id: string;
-  }>;
-};
+export default function EditTaskPage() {
+  const { id } = useParams<{ id: string }>();
+  const trpc = useTRPC();
 
-export default async function EditTaskPage({ params }: EditTaskPageProps) {
-  const { id } = await params;
-  const task = await serverTRPC.tasks.getById.query({
-    id,
-  });
+  const taskQuery = useQuery(
+    trpc.tasks.getById.queryOptions({
+      id,
+    }),
+  );
+
+  if (!taskQuery.data) {
+    return <LoadingTaskForm />;
+  }
 
   return (
     <section className="my-auto gap-4">
       <h1 className="text-2xl font-bold text-center">Editar tarefa</h1>
-      <TaskForm task={task} />
+      <TaskForm task={taskQuery.data} />
     </section>
   );
 }

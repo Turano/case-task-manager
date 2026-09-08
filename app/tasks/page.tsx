@@ -1,17 +1,17 @@
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 
-import { getQueryClient, trpc } from "@/trpc/server";
-import { serverTRPC } from "@/trpc/server-client";
+import { getQueryClient, trpc, getServerTRPC } from "@/trpc/server";
 
 import TasksList from "./tasks-list";
 import Link from "next/link";
 
 export default async function Tasks() {
   const queryClient = getQueryClient();
+  const serverTRPC = await getServerTRPC();
 
   // Preloads the first page on the server and hydrates the cache on the client,
   // meeting the SSR requirement without a new initial fetch.
-  const firstPage = await serverTRPC.tasks.list.query({
+  const firstPage = await serverTRPC.tasks.list({
     limit: 20,
     cursor: 0,
   });
