@@ -117,12 +117,19 @@ export default function TaskForm({ task }: TaskFormProps) {
           className="border p-2 rounded"
         />
       </div>
-      {validationError && <p>{validationError}</p>}
+      {validationError && (
+        <p className="text-red-500 text-center">{validationError}</p>
+      )}
       <button
         type="submit"
         className="bg-green-600 text-white p-2 rounded hover:bg-green-700 cursor-pointer"
+        disabled={createTask.isPending || updateTask.isPending}
       >
-        {task ? "Atualizar Tarefa" : "Criar Tarefa"}
+        {createTask.isPending || updateTask.isPending
+          ? "Processando..."
+          : task
+            ? "Atualizar Tarefa"
+            : "Criar Tarefa"}
       </button>
     </form>
   );

@@ -7,12 +7,14 @@ import {
 } from "@tanstack/react-query";
 import { useTRPC } from "@/trpc/client";
 import Link from "next/link";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useToast } from "@/components/toast";
 
 export default function TasksList() {
   const { showToast } = useToast();
   const trpc = useTRPC();
+
+  const [deletingTaskId, setDeletingTaskId] = useState<string | null>(null);
 
   const {
     data,
@@ -102,17 +104,18 @@ export default function TasksList() {
           <div className="flex flex-row-reverse gap-2">
             <button
               onClick={() => {
+                setDeletingTaskId(task.id);
                 deleteTask.mutate({ id: task.id });
               }}
-              disabled={deleteTask.isPending}
+              disabled={deletingTaskId === task.id}
               className="bg-red-600 text-white px-2 rounded hover:bg-red-700 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Excluir
+              {deletingTaskId === task.id ? "Excluindo..." : "Excluir"}
             </button>
             <Link
               href={`/tasks/${task.id}/edit`}
               onClick={(e) => {
-                if (deleteTask.isPending) {
+                if (deletingTaskId === task.id) {
                   e.preventDefault();
                 }
               }}
