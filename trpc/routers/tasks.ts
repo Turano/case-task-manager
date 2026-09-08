@@ -84,7 +84,7 @@ export const tasksRouter = createTRPCRouter({
       const task = tasks.find((task) => task.id === input.id);
 
       if (!task) {
-        throw new Error("Task not found");
+        throw new Error("Tarefa não encontrada");
       }
 
       return task;
