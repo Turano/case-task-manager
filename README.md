@@ -33,6 +33,49 @@ Cada tarefa possui:
 - `descricao`: descrição opcional
 - `dataCriacao`: data de criação
 
+## Como executar
+
+### Pré-requisitos
+
+- Node.js
+- npm
+
+### Instalação
+
+Clone o repositório e instale as dependências:
+
+```
+npm install
+```
+
+### Desenvolvimento
+
+Execute:
+
+```
+npm run dev
+```
+
+A aplicação estará disponível em:
+
+```
+http://localhost:3000
+```
+
+### Build
+
+Para verificar a build de produção:
+
+```
+npm run build
+```
+
+Para executar a aplicação em produção:
+
+```
+npm start
+```
+
 ## Estrutura
 
 ```text
